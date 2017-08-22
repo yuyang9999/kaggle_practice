@@ -188,7 +188,7 @@ labels_train = np.concatenate((labels[idx_train], labels[idx_train]))
 
 data_1_val = np.vstack((data_1[idx_val], data_2[idx_val]))
 data_2_val = np.vstack((data_2[idx_val], data_1[idx_val]))
-labels_val = np.concatenate(labels[idx_val], labels[idx_val])
+labels_val = np.concatenate((labels[idx_val], labels[idx_val]))
 
 weight_val = np.ones(len(labels_val))
 if re_weight:
@@ -201,7 +201,7 @@ if re_weight:
 embedding_layer = Embedding(nb_words, EMBEDDING_DIM, weights=[embedding_matrix],
                             input_length=MAX_SEQUENCE_LENGTH, trainable=False)
 
-lstm_layer = LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_activation=rate_drop_lstm)
+lstm_layer = LSTM(num_lstm, dropout=rate_drop_lstm, recurrent_dropout=rate_drop_lstm)
 
 sequence_1_input = Input(shape=(MAX_SEQUENCE_LENGTH,), dtype='int32')
 embedded_sequences_1 = embedding_layer(sequence_1_input)
@@ -233,7 +233,7 @@ else:
 ## train the model
 ##############################
 model = Model(inputs=[sequence_1_input, sequence_2_input], outputs=preds)
-model.compile(loss='binary_crossentroy', optimizer='nadam', metrics=['acc'])
+model.compile(loss='binary_crossentropy', optimizer='nadam', metrics=['acc'])
 print(STAMP)
 
 early_stopping = EarlyStopping(monitor='val_loss', patience=3)
@@ -259,8 +259,5 @@ preds /= 2
 
 submission = pd.DataFrame({'test_id':test_ids, 'is_duplicate':preds.ravel()})
 submission.to_csv('%.4f_' % (bst_val_score) + STAMP + '.csv', index=False)
-
-
-
 
 
