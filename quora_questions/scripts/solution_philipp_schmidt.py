@@ -5,6 +5,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from subprocess import check_output
 
+%matplotlib inline
 import plotly.offline as py
 py.init_notebook_mode(connected=True)
 import plotly.graph_objs as go
